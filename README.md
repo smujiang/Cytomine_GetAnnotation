@@ -18,7 +18,5 @@ Run conn.fetch_url("link you just copied") in your code,you will get the "Url ba
 There might be more efficient ways to get it, tell me if you find it.
 
 #### Contributors:
-Jiang.Jun@mayo.edu
-
-Hart.Steven@mayo.edu
+Jiang Jun and Hart Steven at Mayo Clinics
 
