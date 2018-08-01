@@ -17,5 +17,5 @@ You can refer to the last couple of lines in export_annotations.py.
 There might be more efficient ways to get it, tell me if you find it.
 
 #### Contributors:
-Jiang Jun and Hart Steven at Mayo Clinics
+Jiang Jun and Hart Steven at Mayo Clinic
 

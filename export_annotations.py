@@ -10,7 +10,7 @@ import numpy as np
 import geopandas as gpd
 import pandas as pd
 import shapely
-from PIL import Image
+
 import matplotlib.pyplot as plt
 import openslide
 
@@ -20,11 +20,11 @@ import warnings
 from cytomine.lib import *
 import requests
 import wget
+from PIL import Image
 
-Image.MAX_IMAGE_PIXELS = None
 Image.warnings.simplefilter('error', Image.DecompressionBombWarning)
 warnings.simplefilter(action='ignore', category=FutureWarning)
-
+Image.MAX_IMAGE_PIXELS = None
 
 # parse input arguments
 parser = argparse.ArgumentParser(description='Extract a series of annotations and corresponding image from cytomine')
@@ -161,19 +161,20 @@ ax.set_axis_off()
 DPI = f.get_dpi()
 plt.subplots_adjust(left=0, bottom=0, right=1, top=1,wspace=0, hspace=0)
 f.set_size_inches(ann_w / DPI, ann_h / DPI)
-xy_coords = str(minx) + "_" + str(miny) + "_" + str(maxx) + "_" + str(maxy)
-out_name = str(id_project) + "_" + str(id_image) + "_" + xy_coords + "_mask.png"
-out_name = os.path.join(out_dir, out_name)
-f.savefig(out_name, pad_inches='tight')
+
+f.savefig("Mask_tmp.png", pad_inches='tight')
 
 # Clip the target region from the entire annotation
-ann_Img_tmp = Image.open(out_name)
+ann_Img_tmp = Image.open("Mask_tmp.png")
 M = np.array(ann_Img_tmp)
 Ow= minx-a_minx
 Oh= a_maxy-maxy
 t = M[Oh:Oh+target_h,Ow:Ow+target_w,:,]
 im = Image.fromarray(t)
-im.save("Mask_patch.png")
+xy_coords = str(minx) + "_" + str(miny) + "_" + str(maxx) + "_" + str(maxy)
+out_name = str(id_project) + "_" + str(id_image) + "_" + xy_coords + "_mask.png"
+out_name = os.path.join(out_dir, out_name)
+im.save(out_name, "png")
 
 #Get image instances from project
 image_instances = ImageInstanceCollection()
@@ -182,19 +183,24 @@ image_instances  =  conn.fetch(image_instances)
 images = image_instances.data()
 
 #Go through all images
-for image in images:
-    if image.id == id_image:
-        print("%s" % image.fullPath)
-        print("image id: %d width: %d height: %d resolution: %f magnification: %d filename: %s" %(image.id,image.width,image.height,image.resolution,image.magnification,image.filename))
-        url = download_url_base + image.fullPath
-        r = requests.get(url)
-        f_name = wget.filename_from_url(url)
-        with open(f_name, 'wb') as f:
-            f.write(r.content)
-#TODO: check file download complete
-# read the original slide image, parse it and get the target patch at level 0
-sd_fix = openslide.OpenSlide("original_slide.svs")
+img = [i for i in images if i.id == id_image]
+if not image.__sizeof__() == 1:
+    pass
+image = img[0]
+# print("image id: %d width: %d height: %d resolution: %f magnification: %d filename: %s" %(image.id,image.width,image.height,image.resolution,image.magnification,image.filename))
+url = download_url_base + image.fullPath
+print("Downloading image from %s" % url)
+print("The image file size usually occupy more than 1GB, so downloading will last several minutes, be patient!")
+r = requests.get(url)
+f_name = url[url.rfind("/")+1:-1]
+with open(f_name, 'wb') as f:
+    f.write(r.content) # save the whole slide image
+# read the original whole slide image, parse it and get the target patch at level 0
+sd_fix = openslide.OpenSlide(f_name)
 dim = sd_fix.dimensions
 Img = sd_fix.read_region((minx, dim[1]-maxy), 0, (target_w, target_h))# get patch from level 0
-Img.save("Image_patch.png", "png")
+out_name = str(id_project) + "_" + str(id_image) + "_" + xy_coords + "_img.png"
+out_name = os.path.join(out_dir, out_name)
+im.save(out_name)
+Img.save(out_name, "png")
 
