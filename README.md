@@ -1,6 +1,7 @@
 # Cytomine_GetAnnotation
 This repo shows how can we export annotations(mask) and corrosponding images(patches of original slide images) from a Cytomine server.
 You should have a Cytomine server and install the Cytomine python client package first. I have modified the official version, and made it capable for Python 3.
+You can find it [HERE](https://github.com/smujiang/Cytomine_Python_Client-0.1.4_for_python_3.6)
 
 Q&A:
 1. How can I get the enviroment variables, such as CYTOMINE_HOST and CYTOMINE_PUBLIC_KEY?
