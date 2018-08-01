@@ -7,6 +7,7 @@ You can find it [HERE](https://github.com/smujiang/Cytomine_Python_Client-0.1.4_
 1. How can I get the enviroment variables, such as CYTOMINE_HOST and CYTOMINE_PUBLIC_KEY?
 
 Ask your Cytomine server manager.
+
 2. What's "url base address",and how can I know it?
 
 "Url base address" is associate with your Cytomine server. Our code will use this url
