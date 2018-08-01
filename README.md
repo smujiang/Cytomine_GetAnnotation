@@ -6,11 +6,11 @@ You can find it [HERE](https://github.com/smujiang/Cytomine_Python_Client-0.1.4_
 #### Q&A:
 1. How can I get the enviroment variables, such as CYTOMINE_HOST and CYTOMINE_PUBLIC_KEY?
 
-Ask your Cytomine server manager.
+    Ask your Cytomine server manager.
 
 2. What's "url base address",and how can I know it?
 
-"Url base address" is associate with your Cytomine server. Our code will use this url
+    "Url base address" is associate with your Cytomine server. Our code will use this url
 address and some other information(image.fullPath) to piece together a full url to download an original image.
 You can refer to the last couple of lines in export_annotations.py.
 Login to your Cytomine server, open a project,and you will find a list of images. Find the download selection in the dropdown combbox, right click and save the link.
