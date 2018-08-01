@@ -3,7 +3,7 @@ This repo shows how can we export annotations(mask) and corrosponding images(pat
 You should have a Cytomine server and install the Cytomine python client package first. I have modified the official version, and made it capable for Python 3.
 You can find it [HERE](https://github.com/smujiang/Cytomine_Python_Client-0.1.4_for_python_3.6)
 
-Q&A:
+#### Q&A:
 1. How can I get the enviroment variables, such as CYTOMINE_HOST and CYTOMINE_PUBLIC_KEY?
 Ask your Cytomine server manager.
 2. What's "url base address",and how can I know it?
@@ -14,7 +14,8 @@ Login to your Cytomine server, open a project,and you will find a list of images
 Run conn.fetch_url("link you just copied") in your code,you will get the "Url base address" in the console.
 There might be more efficient ways to get it, tell me if you find it.
 
-Contributors:
+#### Contributors:
 Jiang.Jun@mayo.edu
+
 Hart.Steven@mayo.edu
 
