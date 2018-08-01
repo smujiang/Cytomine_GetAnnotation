@@ -13,8 +13,7 @@ You can find it [HERE](https://github.com/smujiang/Cytomine_Python_Client-0.1.4_
     "Url base address" is associate with your Cytomine server. Our code will use this url
 address and some other information(image.fullPath) to piece together a full url to download an original image.
 You can refer to the last couple of lines in export_annotations.py.
-Login to your Cytomine server, open a project,and you will find a list of images. Find the download selection in the dropdown combbox, right click and save the link.
-Run conn.fetch_url("link you just copied") in your code,you will get the "Url base address" in the console.
+    Login to your Cytomine server, open a project,and you will find a list of images. Find the download selection in the dropdown combbox, right click and save the link.Run conn.fetch_url("link you just copied") in your code,you will get the "Url base address" in the console.
 There might be more efficient ways to get it, tell me if you find it.
 
 #### Contributors:
