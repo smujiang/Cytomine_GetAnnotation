@@ -1,0 +1,24 @@
+id,name,color,hex
+6710,Background,black,#000000
+58499,Target Region,whitesmoke,#F5F5F5
+16070,Subcutis,lemonchiffon,#FFFACD
+16015,Reticular Dermis,teal,#008080
+6630,Papillary Dermis,olive,#808000
+6622,Epidermis,crimson,#DC143C
+6616,Stratum Corneum,blue,#0000FF
+6644,Hair follical,grey,#808080
+340258,Hair mesenchyme,g,"(0, 0.5, 0)"
+6636,Hair bulb,dimgray,#696969
+34003,Hair bulb basaloid,saddlebrown,#8B4513
+6702,Smooth muscle,pink,#FFC0CB
+6658,Sebaceous gland,purple,#800080
+6666,Eccrine gland,orange,#FFA500
+6672,Apocrine gland,plum,#DDA0DD
+6650,Blood vessel,red,#FF0000
+6680,Melanocytes,brown,#A52A2A
+6688,Nevomelanocytes,maroon,#800000
+6694,Langerhans cells,darkolivegreen,#556B2F
+6733,Inflammatory cell,lawngreen,#7CFC00
+6741,Fibroblasts,gold,#FFD700
+16229,Nerve,turquoise,#40E0D0
+186746,Lymphatic,steelblue,#4682B4
