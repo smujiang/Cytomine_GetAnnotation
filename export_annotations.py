@@ -33,7 +33,7 @@ parser.add_argument("-p", "--id_project", dest='id_project', default=1553, type=
 parser.add_argument("-i", "--id_image", dest='id_image', default=None, type=int, required=True,
                     help="ProjectID with annotations")
 parser.add_argument("-o", "--out_dir", dest='out_dir', default=os.getcwd(), help="Output directory")
-parser.add_argument("-c", "--annotation_config", dest='annotation_config', default='annotation_config',
+parser.add_argument("-c", "--annotation_config", dest='annotation_config', default='annotation.config',
                     help="Annotation config file")
 
 parser.add_argument("-v", "--verbose",
@@ -99,7 +99,13 @@ annotations = conn.get_annotations(
 
 # Get dataframe of annotations objects
 df = pd.DataFrame()
+# creat a file to save json for debug
+fp_json = open("annotation_json.txt","a")
 for x in range(len(annotations)):
+    # save json for debug
+    txt_json = annotations[x].to_json()
+    fp_json.write(txt_json+"\n")
+    ######## debug end ########
     tmp_df = pd.read_json(annotations[x].to_json())
     tmp_df['location'] = tmp_df['location'].apply(shapely.wkt.loads)
     if tmp_df.term.__len__() > 0:
