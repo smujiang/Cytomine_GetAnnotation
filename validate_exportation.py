@@ -4,8 +4,9 @@ Image.MAX_IMAGE_PIXELS = None
 
 img_name = "1553_397997_76836_21519_104676_28613_img.png" # Change it before your test
 mask_name = "1553_397997_76836_21519_104676_28613_mask.png" # Change it before your test
-init_pos = [1000,1000] # Change it before your test
-patch_size = [3000,3000] # Change it before your test
+init_pos = [100,100] # Change it before your test
+patch_size = [2800,2800] # Change it before your test
+# patch_size = [3080,3080] # Change it before your test
 
 img = Image.open(img_name)
 I = np.array(img)
