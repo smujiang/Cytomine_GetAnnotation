@@ -52,14 +52,16 @@ with open(annotation_config, 'r') as f:
 # Set the ID to an int
 color_df = color_df.astype(dtype={'id': 'int64'})
 
-
-
-
 for f_name in FileNames:
     df = pd.DataFrame()
     # f_name = "395795.txt"   # no valuable content
+    # f_name = "397261.txt"
+    # f_name = "394513.txt"
+    # f_name = "395427.txt"
     # f_name = "397261.txt"  # too big to save
-    # f_name = "398181.txt"  # too big to save
+    # f_name = "398181.txt"
+    # f_name = "398923.txt"
+    f_name = "399843.txt"
     f = base_dir+f_name
     id_image = os.path.splitext(os.path.basename(f_name))[0]
     print("Processing %s" % f)
@@ -67,7 +69,7 @@ for f_name in FileNames:
         line = fp.readline()
         while line:
             print(line)
-            re.match("\"term\":[58499]")
+            # re.match("\"term\":[58499]")
             tmp_df = pd.read_json(line, lines=True)
             tmp_df['location'] = tmp_df['location'].apply(shapely.wkt.loads)
             if tmp_df.term.__len__() > 0:
