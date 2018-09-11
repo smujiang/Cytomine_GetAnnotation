@@ -27,12 +27,16 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 Image.MAX_IMAGE_PIXELS = None
 
 # parse input arguments
-parser = argparse.ArgumentParser(description='Extract a series of annotations and corresponding image from cytomine')
-parser.add_argument("-u", "--id_user", dest='id_user', default=7531, type=int, help="UserID related to annotations")
-parser.add_argument("-p", "--id_project", dest='id_project', default=1553, type=int, help="ProjectID with annotations")
+parser = argparse.ArgumentParser(
+    description='Extract a series of annotations and corresponding image from cytomine')
+parser.add_argument("-u", "--id_user", dest='id_user',
+                    default=7531, type=int, help="UserID related to annotations")
+parser.add_argument("-p", "--id_project", dest='id_project',
+                    default=1553, type=int, help="ProjectID with annotations")
 parser.add_argument("-i", "--id_image", dest='id_image', default=None, type=int, required=True,
                     help="ProjectID with annotations")
-parser.add_argument("-o", "--out_dir", dest='out_dir', default=os.getcwd(), help="Output directory")
+parser.add_argument("-o", "--out_dir", dest='out_dir',
+                    default=os.getcwd(), help="Output directory")
 parser.add_argument("-c", "--annotation_config", dest='annotation_config', default='annotation.config',
                     help="Annotation config file")
 
@@ -41,8 +45,8 @@ parser.add_argument("-v", "--verbose",
                     choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
                     default="INFO",
                     help="Set the logging level")
-parser.add_argument("-d", "--download_url_base",dest="download_url_base",
-                    default="http://cytomine.com/image/download?fif=",help="Url base address, will be used to download images")
+parser.add_argument("-d", "--download_url_base", dest="download_url_base",
+                    default="http://cytomine.com/image/download?fif=", help="Url base address, will be used to download images")
 
 args = parser.parse_args()
 
@@ -77,7 +81,8 @@ with open(annotation_config, 'r') as f:
     for line in f:
         if line[:1] in '0123456789':
             id, name, color = line.strip().split("\t")
-            tmp = pd.DataFrame(data={'id': [id], 'name': [name], 'color': [color], 'hex': [colors[color]]})
+            tmp = pd.DataFrame(data={'id': [id], 'name': [name], 'color': [
+                               color], 'hex': [colors[color]]})
             color_df = color_df.append(tmp)
             color_list.append(color)
         else:
@@ -86,7 +91,8 @@ with open(annotation_config, 'r') as f:
 # Set the ID to an int
 color_df = color_df.astype(dtype={'id': 'int64'})
 
-conn = Cytomine(cytomine_host, cytomine_public_key, cytomine_private_key, base_path='/api/', working_path='.',verbose=True)
+conn = Cytomine(cytomine_host, cytomine_public_key, cytomine_private_key,
+                base_path='/api/', working_path='.', verbose=True)
 
 annotations = conn.get_annotations(
     id_project=id_project,
@@ -100,17 +106,19 @@ annotations = conn.get_annotations(
 # Get dataframe of annotations objects
 df = pd.DataFrame()
 # creat a file to save json for debug
-fp_json = open("annotation_json.txt","a")
+fp_json = open("annotation_json.txt", "a")
 for x in range(len(annotations)):
     # save json for debug
     txt_json = annotations[x].to_json()
-    fp_json.write(txt_json+"\n")
+    fp_json.write(txt_json + "\n")
     ######## debug end ########
     tmp_df = pd.read_json(annotations[x].to_json())
     tmp_df['location'] = tmp_df['location'].apply(shapely.wkt.loads)
     if tmp_df.term.__len__() > 0:
-        tmp_df['color_name'] = color_df.color[color_df.id == tmp_df['term'].tolist()[0]] # annotation color
-        tmp_df['termName'] = color_df.name[color_df.id == tmp_df['term'].tolist()[0]]  # annotation name/ cell type
+        tmp_df['color_name'] = color_df.color[color_df.id ==
+                                              tmp_df['term'].tolist()[0]]  # annotation color
+        tmp_df['termName'] = color_df.name[color_df.id == tmp_df[
+            'term'].tolist()[0]]  # annotation name/ cell type
         df = df.append(gpd.GeoDataFrame(tmp_df, geometry='location'))
 
 
@@ -128,7 +136,7 @@ maxy = int(target_df.maxy)
 target_h = maxy - miny
 target_w = maxx - minx
 
-## get the bounding box of all the annotation
+# get the bounding box of all the annotation
 a_minx = minx
 a_miny = miny
 a_maxx = maxx
@@ -152,7 +160,7 @@ for c_idx in range(num_color):
     tmp = df[df.color_name == color_list[c_idx]]
 
 # # Plot all the annotations
-num_subplots = len(color_list)# Plot with least important first
+num_subplots = len(color_list)  # Plot with least important first
 f, ax = plt.subplots(frameon=False)
 f.tight_layout(pad=0, h_pad=0, w_pad=0)
 ax.set_xlim(a_minx, a_maxx)
@@ -165,7 +173,7 @@ for sub_plot in range(num_subplots):
         pass
 ax.set_axis_off()
 DPI = f.get_dpi()
-plt.subplots_adjust(left=0, bottom=0, right=1, top=1,wspace=0, hspace=0)
+plt.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0, hspace=0)
 f.set_size_inches(ann_w / DPI, ann_h / DPI)
 
 f.savefig("Mask_tmp.png", pad_inches='tight')
@@ -173,22 +181,23 @@ f.savefig("Mask_tmp.png", pad_inches='tight')
 # Clip the target region from the entire annotation
 ann_Img_tmp = Image.open("Mask_tmp.png")
 M = np.array(ann_Img_tmp)
-Ow= minx-a_minx
-Oh= a_maxy-maxy
-t = M[Oh:Oh+target_h,Ow:Ow+target_w,:,]
+Ow = minx - a_minx
+Oh = a_maxy - maxy
+t = M[Oh:Oh + target_h, Ow:Ow + target_w, :, ]
 im = Image.fromarray(t)
 xy_coords = str(minx) + "_" + str(miny) + "_" + str(maxx) + "_" + str(maxy)
-out_name = str(id_project) + "_" + str(id_image) + "_" + xy_coords + "_mask.png"
+out_name = str(id_project) + "_" + str(id_image) + \
+    "_" + xy_coords + "_mask.png"
 out_name = os.path.join(out_dir, out_name)
 im.save(out_name, "png")
 
-#Get image instances from project
+# Get image instances from project
 image_instances = ImageInstanceCollection()
-image_instances.project  =  id_project
-image_instances  =  conn.fetch(image_instances)
+image_instances.project = id_project
+image_instances = conn.fetch(image_instances)
 images = image_instances.data()
 
-#Go through all images
+# Go through all images
 img = [i for i in images if i.id == id_image]
 if not image.__sizeof__() == 1:
     pass
@@ -198,15 +207,15 @@ url = download_url_base + image.fullPath
 print("Downloading image from %s" % url)
 print("The image file size usually occupy more than 1GB, so downloading will last several minutes, be patient!")
 r = requests.get(url)
-f_name = url[url.rfind("/")+1:-1]
+f_name = url[url.rfind("/") + 1:-1]
 with open(f_name, 'wb') as f:
-    f.write(r.content) # save the whole slide image
-# read the original whole slide image, parse it and get the target patch at level 0
+    f.write(r.content)  # save the whole slide image
+# read the original whole slide image, parse it and get the target patch
+# at level 0
 sd_fix = openslide.OpenSlide(f_name)
 dim = sd_fix.dimensions
-Img = sd_fix.read_region((minx, dim[1]-maxy), 0, (target_w, target_h))# get patch from level 0
+# get patch from level 0
+Img = sd_fix.read_region((minx, dim[1] - maxy), 0, (target_w, target_h))
 out_name = str(id_project) + "_" + str(id_image) + "_" + xy_coords + "_img.png"
 out_name = os.path.join(out_dir, out_name)
 im.save(out_name)
-Img.save(out_name, "png")
-
